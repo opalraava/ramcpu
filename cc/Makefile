@@ -2,7 +2,7 @@ target = cc
 headers = main.h getopt.h  stdio.h stdlib.h string.h
 sources = main.c getopt.c libc.c
 cc = gcc
-cflags = -ansi -Wall -pedantic -g
+cflags = -Wall -pedantic -g -O -fno-builtin
 
 all : $(target)
 

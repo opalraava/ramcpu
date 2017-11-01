@@ -4,4 +4,5 @@
 #define NULL 0
 #endif
 
+int strlen(char* s);
 #endif
