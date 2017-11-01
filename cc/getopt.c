@@ -16,6 +16,7 @@ getopt(int argc, char* argv[], char* opt_spec)
       
       while (*opt_spec) {
 	if (*opt_spec == ch) {
+	  if (argv[optind][2] != '\0') return EOF;
 	  ++optind;
 	  if (opt_spec[1] == ':') {
 	    optarg = argv[optind++];
