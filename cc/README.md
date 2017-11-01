@@ -6,6 +6,6 @@ simple. so it has no floating point. It does not have
 most of the standard libc. Just the basic things like:
 
 * stdio.h, stdlib.h, string.h
-* char, int, void, structs, extern + static
+* char, int, long, void, structs, unsigned, const, extern + static
 * standard type declarations, definitions and operators,
   functions, flow control, block statements.

@@ -2,11 +2,13 @@
 #include "stdlib.h"
 #include "string.h"
 
-static void syscall_exit(int status);
-static void syscall_write(int fileno, char* buf, int size);
+#if 0
+static void syscall1_exit(int status);
+static void syscall1_write(int fileno, char* buf, int size);
+#endif
 
-static long _exit(int errcode);
-static long _write(long fd, const char* buf, unsigned long len);
+static long syscall2_exit(int errcode);
+static long syscall2_write(long fd, const char* buf, unsigned long len);
 
 /*
  * stdio.h
@@ -17,7 +19,7 @@ printf(char* fmt, ...)
 {
   int size = strlen(fmt);
   /*  syscall_write(1,fmt,size); */
-  _write(1,fmt,size);
+  syscall2_write(1,fmt,size);
   return 0;
 }
 
@@ -29,7 +31,7 @@ void
 exit(int status)
 {
   /* syscall_exit(status); */
-  _exit(status);
+  syscall2_exit(status);
 }
 
 /*
@@ -39,9 +41,10 @@ exit(int status)
 int
 strlen(char* s)
 {
-  int i = 0;
-  while (*s++) i++;
-  return i;
+  char* t = s;
+  
+  while (*t++) ;
+  return (t-s);
 }
 
 
@@ -53,6 +56,9 @@ strlen(char* s)
 
 /* Linux System Calls */
 
+
+
+# if 0
 /* 
 
  https://stackoverflow.com/questions/3866217/how-can-i-make-the-system-call-write-print-to-the-screen
@@ -98,14 +104,14 @@ syscall_write(int fileno, char* buf, int size)
 	  : "%eax", "%ebx", "%ecx", "%edx"
 	  );
 }
-
+#endif
 
 /*
  * https://github.com/lief-project/tutorials/blob/master/05_ELF_infect_plt-got/arch/x86_64/syscall.c
  */
 
 
-static long _write(long fd, const char* buf, unsigned long len) {
+static long syscall2_write(long fd, const char* buf, unsigned long len) {
 
   register long ret asm ("rax");
   register long _fd asm ("rdi") = fd;
@@ -121,7 +127,7 @@ static long _write(long fd, const char* buf, unsigned long len) {
   return ret;
 }
 
-static long _exit(int errcode) {
+static long syscall2_exit(int errcode) {
 
   register long ret asm ("rax");
   register int _errcode asm ("rdi") = errcode;
