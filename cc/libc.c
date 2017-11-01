@@ -2,4 +2,26 @@
 #include "stdlib.h"
 #include "string.h"
 
-void t784379942378() {}
+/*
+ * stdio.h
+ */
+
+int
+printf(char* fmt, ...)
+{
+  return 0;
+}
+
+/*
+ * stdlib.h
+ */
+
+void
+exit(int status)
+{
+  /* exit system call */
+  __asm__("movl $1,%eax;"
+      "xorl %ebx,%ebx;"
+      "int  $0x80"
+      );
+}

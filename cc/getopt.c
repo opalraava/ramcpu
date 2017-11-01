@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
+#include "stdio.h"
 #include "getopt.h"
 
 int optind = 1;
