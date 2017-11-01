@@ -2,13 +2,8 @@
 #include "stdlib.h"
 #include "string.h"
 
-#if 0
-static void syscall1_exit(int status);
-static void syscall1_write(int fileno, char* buf, int size);
-#endif
-
-static long syscall2_exit(int errcode);
-static long syscall2_write(long fd, const char* buf, unsigned long len);
+static long syscall_exit(int errcode);
+static long syscall_write(long fd, const char* buf, unsigned long len);
 
 /*
  * stdio.h
@@ -17,9 +12,28 @@ static long syscall2_write(long fd, const char* buf, unsigned long len);
 int
 printf(char* fmt, ...)
 {
-  int size = strlen(fmt);
-  /*  syscall_write(1,fmt,size); */
-  syscall2_write(1,fmt,size);
+  puts(fmt);
+  return 0;
+}
+
+int
+fputs(char* str, FILE* stream)
+{
+  int size = strlen(str);
+  
+  syscall_write(stream->fd,str,size);
+  return 0;
+}
+int
+puts(char* str)
+{
+  int size;
+  char nl[] = "\r\n";
+  
+  size = strlen(str);
+  syscall_write(1,str,size);
+  size = strlen(nl);
+  syscall_write(1,nl,size);
   return 0;
 }
 
@@ -30,8 +44,7 @@ printf(char* fmt, ...)
 void
 exit(int status)
 {
-  /* syscall_exit(status); */
-  syscall2_exit(status);
+  syscall_exit(status);
 }
 
 /*
@@ -54,9 +67,8 @@ strlen(char* s)
 
 
 
+
 /* Linux System Calls */
-
-
 
 # if 0
 /* 
@@ -111,7 +123,7 @@ syscall_write(int fileno, char* buf, int size)
  */
 
 
-static long syscall2_write(long fd, const char* buf, unsigned long len) {
+static long syscall_write(long fd, const char* buf, unsigned long len) {
 
   register long ret asm ("rax");
   register long _fd asm ("rdi") = fd;
@@ -127,7 +139,7 @@ static long syscall2_write(long fd, const char* buf, unsigned long len) {
   return ret;
 }
 
-static long syscall2_exit(int errcode) {
+static long syscall_exit(int errcode) {
 
   register long ret asm ("rax");
   register int _errcode asm ("rdi") = errcode;
