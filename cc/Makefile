@@ -1,8 +1,8 @@
-target = as
-headers =
-sources = main.c
+target = cc
+headers = main.h getopt.h
+sources = main.c getopt.c
 cc = gcc
-cflags = -std=c89 -Wall -pedantic -O3
+cflags = -ansi -Wall -pedantic -g
 
 all : $(target)
 
